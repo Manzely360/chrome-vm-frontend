@@ -261,6 +261,13 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Debug Info */}
+      <div className="bg-yellow-100 p-4 m-4 rounded">
+        <h3 className="font-bold">Debug Info:</h3>
+        <p>Servers length: {servers.length}</p>
+        <p>Servers: {JSON.stringify(servers, null, 2)}</p>
+      </div>
+      
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
