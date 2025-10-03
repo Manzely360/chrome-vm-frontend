@@ -12,6 +12,10 @@ const nextConfig = {
         source: '/api/:path*',
         destination: 'https://chrome-vm-backend-production.up.railway.app/api/:path*',
       },
+      {
+        source: '/api/health',
+        destination: 'https://chrome-vm-backend-production.up.railway.app/health',
+      },
     ];
   },
   async headers() {

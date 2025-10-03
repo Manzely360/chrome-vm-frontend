@@ -9,14 +9,21 @@ import CreateVMModal from '@/components/CreateVMModal';
 import CreateServerModal from '@/components/CreateServerModal';
 import ScriptModal from '@/components/ScriptModal';
 import TerminalModal from '@/components/TerminalModal';
+import ThemeToggle from '@/components/ThemeToggle';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useApp } from '@/contexts/AppContext';
 import { VM, Server, ScriptJob, CreateServerRequest } from '@/types';
 
 export default function Dashboard() {
+  const { t, language } = useTranslation();
+  const { isRTL } = useApp();
+  
   const [vms, setVms] = useState<VM[]>([]);
   const [servers, setServers] = useState<Server[]>([
     {
       id: 'default-cloud-server',
-      name: 'Cloud VM Server (Recommended)',
+      name: `Cloud VM Server (${t('recommended')})`,
       host: 'chrome-vm-backend-production.up.railway.app',
       port: 443,
       agent_port: 443,
@@ -179,20 +186,38 @@ export default function Dashboard() {
 
   const testServer = async (serverId: string) => {
     try {
-      const response = await fetch(`/api/servers/${serverId}/test`, {
-        method: 'POST',
-      });
+      // For the default cloud server, test the health endpoint
+      if (serverId === 'default-cloud-server') {
+        const response = await fetch('/api/health');
+        
+        if (!response.ok) {
+          throw new Error('Server test failed');
+        }
 
-      if (!response.ok) {
-        throw new Error('Server test failed');
-      }
-
-      const result = await response.json();
-      if (result.status === 'success') {
-        toast.success(`Server test successful (${result.response_time})`);
-        fetchServers(); // Refresh server list
+        const result = await response.json();
+        if (result.status === 'healthy') {
+          toast.success(`Server test successful - Backend is healthy`);
+          fetchServers(); // Refresh server list
+        } else {
+          toast.error('Server test failed - Backend unhealthy');
+        }
       } else {
-        toast.error('Server test failed');
+        // For other servers, use the original test endpoint
+        const response = await fetch(`/api/servers/${serverId}/test`, {
+          method: 'POST',
+        });
+
+        if (!response.ok) {
+          throw new Error('Server test failed');
+        }
+
+        const result = await response.json();
+        if (result.status === 'success') {
+          toast.success(`Server test successful (${result.response_time})`);
+          fetchServers(); // Refresh server list
+        } else {
+          toast.error('Server test failed');
+        }
       }
     } catch (error) {
       console.error('Error testing server:', error);
@@ -239,50 +264,52 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Chrome VM Dashboard</h1>
-              <p className="mt-1 text-sm text-gray-500">
-                Manage your browser farm and run automated scripts
+          <div className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'} justify-between items-center py-6`}>
+            <div className={isRTL ? 'text-right' : 'text-left'}>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('title')}</h1>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                {t('subtitle')}
               </p>
             </div>
-            <div className="flex space-x-3">
+            <div className={`flex ${isRTL ? 'flex-row-reverse space-x-reverse' : 'flex-row'} space-x-3`}>
+              <ThemeToggle />
+              <LanguageSwitcher />
               <button
                 onClick={refreshAll}
                 disabled={refreshing}
                 className="btn btn-secondary"
               >
-                <RefreshCwIcon className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                Refresh
+                <RefreshCwIcon className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} ${refreshing ? 'animate-spin' : ''}`} />
+                {t('refresh')}
               </button>
               <button
                 onClick={() => setShowCreateModal(true)}
                 className="btn btn-primary"
                 disabled={servers.length === 0}
               >
-                <PlusIcon className="h-4 w-4 mr-2" />
-                Add VM
+                <PlusIcon className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                {t('addVM')}
               </button>
               <button
                 onClick={() => setShowServerModal(true)}
                 className="btn btn-secondary"
               >
-                <ServerIcon className="h-4 w-4 mr-2" />
-                Add Server
+                <ServerIcon className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                {t('addServer')}
               </button>
             </div>
           </div>
