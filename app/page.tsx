@@ -30,7 +30,6 @@ export default function Dashboard() {
     }
   ]);
   
-  console.log('Initial servers state:', servers);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showServerModal, setShowServerModal] = useState(false);
@@ -42,17 +41,10 @@ export default function Dashboard() {
 
   // Fetch VMs and servers on component mount
   useEffect(() => {
-    console.log('Component mounted, fetching data...');
     fetchVMs();
     fetchServers();
   }, []);
 
-  // Debug servers state changes
-  useEffect(() => {
-    console.log('Servers state changed:', servers);
-    console.log('Servers length:', servers.length);
-    console.log('Servers array:', JSON.stringify(servers, null, 2));
-  }, [servers]);
 
   const fetchVMs = async () => {
     try {
@@ -73,15 +65,12 @@ export default function Dashboard() {
 
   const fetchServers = async () => {
     try {
-      console.log('Fetching additional servers...');
       const response = await fetch('/api/servers');
-      console.log('Server response status:', response.status);
       
       if (!response.ok) {
         throw new Error('Failed to fetch servers');
       }
       const data = await response.json();
-      console.log('Server data received:', data);
       
       // Add additional servers from API to the existing default server
       if (data.length > 0) {
@@ -261,13 +250,6 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Debug Info */}
-      <div className="bg-yellow-100 p-4 m-4 rounded">
-        <h3 className="font-bold">Debug Info:</h3>
-        <p>Servers length: {servers.length}</p>
-        <p>Servers: {JSON.stringify(servers, null, 2)}</p>
-      </div>
-      
       {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
