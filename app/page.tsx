@@ -186,9 +186,9 @@ export default function Dashboard() {
 
   const testServer = async (serverId: string) => {
     try {
-      // For the default cloud server, test the health endpoint
+      // For the default cloud server, test the health endpoint directly
       if (serverId === 'default-cloud-server') {
-        const response = await fetch('/api/health');
+        const response = await fetch('https://chrome-vm-backend-production.up.railway.app/health');
         
         if (!response.ok) {
           throw new Error('Server test failed');
