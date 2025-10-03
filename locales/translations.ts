@@ -16,7 +16,6 @@ export const translations = {
     cancel: 'Cancel',
     test: 'Test',
     delete: 'Delete',
-    runScript: 'Run Script',
     openTerminal: 'Open Terminal',
     
     // VM States
@@ -93,7 +92,6 @@ export const translations = {
     cancel: 'إلغاء',
     test: 'اختبار',
     delete: 'حذف',
-    runScript: 'تشغيل البرنامج النصي',
     openTerminal: 'فتح الطرفية',
     
     // VM States
