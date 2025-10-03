@@ -84,7 +84,7 @@ export default function VMCard({ vm, onDelete, onRunScript, onOpenTerminal }: VM
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-2">
           <MonitorIcon className="h-5 w-5 text-primary-600" />
-          <h3 className="text-lg font-semibold text-gray-900">{vm.name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{vm.name}</h3>
         </div>
         <div className="flex items-center space-x-1">
           {getStatusIcon()}
@@ -97,24 +97,24 @@ export default function VMCard({ vm, onDelete, onRunScript, onOpenTerminal }: VM
       {/* VM Info */}
       <div className="space-y-2 mb-4">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">ID:</span>
-          <span className="font-mono text-gray-900">{vm.id}</span>
+          <span className="text-gray-500 dark:text-gray-400">ID:</span>
+          <span className="font-mono text-gray-900 dark:text-gray-100">{vm.id}</span>
         </div>
         {vm.public_ip && (
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">IP:</span>
-            <span className="font-mono text-gray-900">{vm.public_ip}</span>
+            <span className="text-gray-500 dark:text-gray-400">IP:</span>
+            <span className="font-mono text-gray-900 dark:text-gray-100">{vm.public_ip}</span>
           </div>
         )}
         {vm.chrome_version && (
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Chrome:</span>
-            <span className="font-mono text-gray-900">{vm.chrome_version}</span>
+            <span className="text-gray-500 dark:text-gray-400">Chrome:</span>
+            <span className="font-mono text-gray-900 dark:text-gray-100">{vm.chrome_version}</span>
           </div>
         )}
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Created:</span>
-          <span className="text-gray-900">
+          <span className="text-gray-500 dark:text-gray-400">Created:</span>
+          <span className="text-gray-900 dark:text-gray-100">
             {formatDistanceToNow(new Date(vm.created_at), { addSuffix: true })}
           </span>
         </div>
@@ -168,7 +168,7 @@ export default function VMCard({ vm, onDelete, onRunScript, onOpenTerminal }: VM
       {vm.status === 'ready' && (
         <div className="mt-4">
           <div 
-            className="relative bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-200 transition-colors" 
+            className="relative bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" 
             style={{ height: '200px' }}
             onClick={() => {
               // Open NoVNC in new tab with auto-connect

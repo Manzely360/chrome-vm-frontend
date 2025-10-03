@@ -30,10 +30,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const isRTL = language === 'ar';
 
   useEffect(() => {
-    // Load theme from localStorage
+    // Load theme from localStorage and apply immediately
     const savedTheme = localStorage.getItem('theme') as Theme;
     if (savedTheme) {
       setTheme(savedTheme);
+      // Apply theme immediately to prevent flash
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    } else {
+      // Check system preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        setTheme('dark');
+        document.documentElement.classList.add('dark');
+      }
     }
 
     // Load language from localStorage
