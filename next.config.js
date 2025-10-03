@@ -9,12 +9,12 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'https://chrome-vm-backend-production.up.railway.app/api/:path*',
-      },
-      {
         source: '/api/health',
         destination: 'https://chrome-vm-backend-production.up.railway.app/health',
+      },
+      {
+        source: '/api/:path*',
+        destination: 'https://chrome-vm-backend-production.up.railway.app/api/:path*',
       },
     ];
   },
