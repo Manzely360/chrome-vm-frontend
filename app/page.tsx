@@ -25,9 +25,15 @@ export default function Dashboard() {
 
   // Fetch VMs and servers on component mount
   useEffect(() => {
+    console.log('Component mounted, fetching data...');
     fetchVMs();
     fetchServers();
   }, []);
+
+  // Debug servers state changes
+  useEffect(() => {
+    console.log('Servers state changed:', servers);
+  }, [servers]);
 
   const fetchVMs = async () => {
     try {
@@ -48,14 +54,19 @@ export default function Dashboard() {
 
   const fetchServers = async () => {
     try {
+      console.log('Fetching servers...');
       const response = await fetch('/api/servers');
+      console.log('Server response status:', response.status);
+      
       if (!response.ok) {
         throw new Error('Failed to fetch servers');
       }
       const data = await response.json();
+      console.log('Server data received:', data);
       
       // If no servers exist, add a default cloud server
       if (data.length === 0) {
+        console.log('No servers found, adding default server');
         const defaultServer = {
           id: 'default-cloud-server',
           name: 'Cloud VM Server (Recommended)',
@@ -69,13 +80,16 @@ export default function Dashboard() {
           created_at: new Date().toISOString(),
           is_default: true
         };
+        console.log('Setting default server:', defaultServer);
         setServers([defaultServer]);
       } else {
+        console.log('Setting servers from API:', data);
         setServers(data);
       }
     } catch (error) {
       console.error('Error fetching servers:', error);
       // If API fails, still show default server
+      console.log('API failed, adding default server');
       const defaultServer = {
         id: 'default-cloud-server',
         name: 'Cloud VM Server (Recommended)',
@@ -89,6 +103,7 @@ export default function Dashboard() {
         created_at: new Date().toISOString(),
         is_default: true
       };
+      console.log('Setting default server on error:', defaultServer);
       setServers([defaultServer]);
     }
   };
