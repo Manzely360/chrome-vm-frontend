@@ -64,28 +64,25 @@ export default function Dashboard() {
       const data = await response.json();
       console.log('Server data received:', data);
       
-      // If no servers exist, add a default cloud server
-      if (data.length === 0) {
-        console.log('No servers found, adding default server');
-        const defaultServer = {
-          id: 'default-cloud-server',
-          name: 'Cloud VM Server (Recommended)',
-          host: 'chrome-vm-backend-production.up.railway.app',
-          port: 443,
-          agent_port: 443,
-          novnc_port: 6080,
-          max_vms: 5,
-          location: 'Railway Cloud',
-          status: 'online',
-          created_at: new Date().toISOString(),
-          is_default: true
-        };
-        console.log('Setting default server:', defaultServer);
-        setServers([defaultServer]);
-      } else {
-        console.log('Setting servers from API:', data);
-        setServers(data);
-      }
+      // Always add default server first, then add any additional servers from API
+      const defaultServer = {
+        id: 'default-cloud-server',
+        name: 'Cloud VM Server (Recommended)',
+        host: 'chrome-vm-backend-production.up.railway.app',
+        port: 443,
+        agent_port: 443,
+        novnc_port: 6080,
+        max_vms: 5,
+        location: 'Railway Cloud',
+        status: 'online',
+        created_at: new Date().toISOString(),
+        is_default: true
+      };
+      
+      // Combine default server with any servers from API
+      const allServers = [defaultServer, ...data];
+      console.log('Setting all servers:', allServers);
+      setServers(allServers);
     } catch (error) {
       console.error('Error fetching servers:', error);
       // If API fails, still show default server
