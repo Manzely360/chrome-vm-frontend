@@ -24,6 +24,7 @@ export default function Dashboard() {
       max_vms: 5,
       location: 'Railway Cloud',
       status: 'online',
+      health: 'healthy',
       created_at: new Date().toISOString(),
       is_default: true
     }
