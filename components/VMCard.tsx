@@ -184,9 +184,7 @@ export default function VMCard({ vm, onDelete, onRunScript, onOpenTerminal }: VM
             style={{ height: '200px' }}
             onClick={() => {
               // Open NoVNC in new tab with auto-connect
-              const novncUrl = vm.novnc_url.includes('vnc.html') 
-                ? vm.novnc_url 
-                : `${vm.novnc_url}/vnc.html`;
+              const novncUrl = vm.novnc_url;
               
               const novncWindow = window.open(novncUrl, '_blank');
               
