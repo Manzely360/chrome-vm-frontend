@@ -6,18 +6,19 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/health',
-        destination: 'https://chrome-vm-backend-production.up.railway.app/health',
+      async rewrites() {
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://chrome-vm-backend-production.up.railway.app';
+        return [
+          {
+            source: '/api/health',
+            destination: `${backendUrl}/health`,
+          },
+          {
+            source: '/api/:path*',
+            destination: `${backendUrl}/api/:path*`,
+          },
+        ];
       },
-      {
-        source: '/api/:path*',
-        destination: 'https://chrome-vm-backend-production.up.railway.app/api/:path*',
-      },
-    ];
-  },
   async headers() {
     return [
       {
