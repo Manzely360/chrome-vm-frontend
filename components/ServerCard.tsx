@@ -115,10 +115,10 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-2">
           <ServerIcon className="h-5 w-5 text-primary-600" />
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
             {server.name}
             {server.is_default && (
-              <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+              <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
                 (Recommended)
               </span>
             )}
@@ -135,19 +135,19 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
       {/* Server Info */}
       <div className="space-y-2 mb-4">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Host:</span>
-          <span className="font-mono text-gray-900">{server.host}:{server.port}</span>
+          <span className="text-gray-500 dark:text-gray-400">Host:</span>
+          <span className="font-mono text-gray-900 dark:text-gray-100">{server.host}:{server.port}</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Location:</span>
-          <span className="text-gray-900">{server.location}</span>
+          <span className="text-gray-500 dark:text-gray-400">Location:</span>
+          <span className="text-gray-900 dark:text-gray-100">{server.location}</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Max VMs:</span>
-          <span className="text-gray-900">{server.max_vms}</span>
+          <span className="text-gray-500 dark:text-gray-400">Max VMs:</span>
+          <span className="text-gray-900 dark:text-gray-100">{server.max_vms}</span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-gray-500">Status:</span>
+          <span className="text-gray-500 dark:text-gray-400">Status:</span>
           <div className="flex items-center space-x-1">
             {getStatusIcon()}
             <span className={`text-xs ${getStatusClass()}`}>
@@ -157,14 +157,14 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
         </div>
         {server.response_time && (
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Response:</span>
-            <span className="text-gray-900">{server.response_time}</span>
+            <span className="text-gray-500 dark:text-gray-400">Response:</span>
+            <span className="text-gray-900 dark:text-gray-100">{server.response_time}</span>
           </div>
         )}
         {server.last_check && (
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Last Check:</span>
-            <span className="text-gray-900">
+            <span className="text-gray-500 dark:text-gray-400">Last Check:</span>
+            <span className="text-gray-900 dark:text-gray-100">
               {formatDistanceToNow(new Date(server.last_check), { addSuffix: true })}
             </span>
           </div>
@@ -173,7 +173,7 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
 
       {/* Error Message */}
       {server.error && (
-        <div className="mb-4 p-2 bg-danger-50 border border-danger-200 rounded text-sm text-danger-700">
+        <div className="mb-4 p-2 bg-danger-50 dark:bg-danger-900 border border-danger-200 dark:border-danger-700 rounded text-sm text-danger-700 dark:text-danger-300">
           {server.error}
         </div>
       )}
