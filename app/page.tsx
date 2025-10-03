@@ -29,6 +29,8 @@ export default function Dashboard() {
       is_default: true
     }
   ]);
+  
+  console.log('Initial servers state:', servers);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showServerModal, setShowServerModal] = useState(false);
@@ -48,6 +50,8 @@ export default function Dashboard() {
   // Debug servers state changes
   useEffect(() => {
     console.log('Servers state changed:', servers);
+    console.log('Servers length:', servers.length);
+    console.log('Servers array:', JSON.stringify(servers, null, 2));
   }, [servers]);
 
   const fetchVMs = async () => {
