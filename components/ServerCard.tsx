@@ -55,6 +55,23 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
     }
   };
 
+  const getProviderLogo = () => {
+    switch (server.cloud_provider) {
+      case 'google_cloud':
+        return '☁️'; // Google Cloud logo
+      case 'cloudflare':
+        return '⚡'; // Cloudflare logo
+      case 'aws':
+        return '🟠'; // AWS logo
+      case 'azure':
+        return '🔵'; // Azure logo
+      case 'railway':
+        return '🚂'; // Railway logo
+      default:
+        return '🖥️'; // Default server icon
+    }
+  };
+
   const getHealthClass = () => {
     switch (server.health) {
       case 'healthy':
@@ -115,14 +132,15 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-2">
           <ServerIcon className="h-5 w-5 text-primary-600" />
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-            {server.name}
-            {server.is_default && (
-              <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
-                (Recommended)
-              </span>
-            )}
-          </h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+              <span className="text-xl">{getProviderLogo()}</span>
+              {server.name}
+              {server.is_default && (
+                <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
+                  (Recommended)
+                </span>
+              )}
+            </h3>
         </div>
         <div className="flex items-center space-x-2">
           {getHealthIcon()}

@@ -29,6 +29,8 @@ export interface Server {
   response_time?: string;
   error?: string;
   is_default?: boolean;
+  cloud_provider?: 'cloudflare' | 'google_cloud' | 'aws' | 'azure' | 'railway';
+  provider_logo?: string;
 }
 
 export interface ScriptJob {

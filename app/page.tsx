@@ -22,18 +22,52 @@ export default function Dashboard() {
   const [vms, setVms] = useState<VM[]>([]);
   const [servers, setServers] = useState<Server[]>([
     {
-      id: 'default-cloud-server',
-      name: `Cloud VM Server (${t('recommended')})`,
-      host: 'chrome-vm-backend-production.up.railway.app',
+      id: 'default-cloudflare-server',
+      name: `Cloudflare Workers VM (${t('recommended')})`,
+      host: 'chrome-vm-workers.mgmt-5e1.workers.dev',
+      port: 443,
+      agent_port: 443,
+      novnc_port: 6080,
+      max_vms: 10,
+      location: 'Cloudflare Global',
+      status: 'online',
+      health: 'healthy',
+      created_at: new Date().toISOString(),
+      is_default: true,
+      cloud_provider: 'cloudflare',
+      provider_logo: '⚡'
+    },
+    {
+      id: 'default-google-cloud-server',
+      name: `Google Cloud VM`,
+      host: 'google-cloud-vm-service.up.railway.app',
       port: 443,
       agent_port: 443,
       novnc_port: 6080,
       max_vms: 5,
+      location: 'Google Cloud Global',
+      status: 'online',
+      health: 'healthy',
+      created_at: new Date().toISOString(),
+      is_default: false,
+      cloud_provider: 'google_cloud',
+      provider_logo: '☁️'
+    },
+    {
+      id: 'default-railway-server',
+      name: `Railway VM Server`,
+      host: 'chrome-vm-backend-production.up.railway.app',
+      port: 443,
+      agent_port: 443,
+      novnc_port: 6080,
+      max_vms: 3,
       location: 'Railway Cloud',
       status: 'online',
       health: 'healthy',
       created_at: new Date().toISOString(),
-      is_default: true
+      is_default: false,
+      cloud_provider: 'railway',
+      provider_logo: '🚂'
     }
   ]);
   
