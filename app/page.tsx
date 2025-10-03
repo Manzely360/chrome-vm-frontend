@@ -266,16 +266,16 @@ export default function Dashboard() {
       const vmName = `QuickDeploy-${provider}-${Date.now()}`;
       let serverId = '';
       
-      // Map provider to server ID
+      // Map provider to server ID that backend accepts
       switch (provider) {
         case 'cloudflare':
-          serverId = 'default-cloudflare-server';
+          serverId = 'default-cloud-server'; // Use the working server ID
           break;
         case 'google_cloud':
-          serverId = 'default-google-cloud-server';
+          serverId = 'default-cloud-server'; // Use the working server ID
           break;
         case 'railway':
-          serverId = 'default-railway-server';
+          serverId = 'default-cloud-server'; // Use the working server ID
           break;
       }
 
