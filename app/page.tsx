@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PlusIcon, PlayIcon, Square, TrashIcon, RefreshCwIcon, ServerIcon, MonitorIcon } from 'lucide-react';
+import { PlusIcon, PlayIcon, Square, TrashIcon, RefreshCwIcon, ServerIcon, MonitorIcon, ZapIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import VMCard from '@/components/VMCard';
 import ServerCard from '@/components/ServerCard';
 import CreateVMModal from '@/components/CreateVMModal';
 import CreateServerModal from '@/components/CreateServerModal';
+import QuickDeployModal from '@/components/QuickDeployModal';
 import ScriptModal from '@/components/ScriptModal';
 import TerminalModal from '@/components/TerminalModal';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -74,6 +75,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showServerModal, setShowServerModal] = useState(false);
+  const [showQuickDeployModal, setShowQuickDeployModal] = useState(false);
   const [showScriptModal, setShowScriptModal] = useState(false);
   const [showTerminalModal, setShowTerminalModal] = useState(false);
   const [selectedVM, setSelectedVM] = useState<VM | null>(null);
@@ -259,6 +261,58 @@ export default function Dashboard() {
     }
   };
 
+  const handleQuickDeploy = async (provider: 'cloudflare' | 'google_cloud' | 'railway') => {
+    try {
+      const vmName = `QuickDeploy-${provider}-${Date.now()}`;
+      let serverId = '';
+      
+      // Map provider to server ID
+      switch (provider) {
+        case 'cloudflare':
+          serverId = 'default-cloudflare-server';
+          break;
+        case 'google_cloud':
+          serverId = 'default-google-cloud-server';
+          break;
+        case 'railway':
+          serverId = 'default-railway-server';
+          break;
+      }
+
+      toast.loading(`Deploying VM on ${provider}...`, { id: 'quick-deploy' });
+
+      const response = await fetch('/api/vms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: vmName,
+          server_id: serverId,
+          instanceType: 't3.medium'
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create VM');
+      }
+
+      const result = await response.json();
+      toast.success(`VM deployed successfully on ${provider}!`, { id: 'quick-deploy' });
+      
+      // Refresh VMs list
+      await fetchVMs();
+      
+      // Close the modal
+      setShowQuickDeployModal(false);
+      
+    } catch (error) {
+      console.error('Quick deploy error:', error);
+      toast.error(`Failed to deploy VM on ${provider}: ${error instanceof Error ? error.message : 'Unknown error'}`, { id: 'quick-deploy' });
+    }
+  };
+
   const runScript = async (vmId: string, script: string, options: any) => {
     try {
       const response = await fetch(`/api/vms/${vmId}/run-script`, {
@@ -329,6 +383,13 @@ export default function Dashboard() {
               >
                 <RefreshCwIcon className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'} ${refreshing ? 'animate-spin' : ''}`} />
                 {t('refresh')}
+              </button>
+              <button
+                onClick={() => setShowQuickDeployModal(true)}
+                className="btn bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0"
+              >
+                <ZapIcon className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                Quick Deploy
               </button>
               <button
                 onClick={() => setShowCreateModal(true)}
@@ -474,6 +535,12 @@ export default function Dashboard() {
         isOpen={showServerModal}
         onClose={() => setShowServerModal(false)}
         onCreate={createServer}
+      />
+
+      <QuickDeployModal
+        isOpen={showQuickDeployModal}
+        onClose={() => setShowQuickDeployModal(false)}
+        onDeploy={handleQuickDeploy}
       />
 
       <ScriptModal
