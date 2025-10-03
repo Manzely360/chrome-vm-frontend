@@ -13,7 +13,21 @@ import { VM, Server, ScriptJob, CreateServerRequest } from '@/types';
 
 export default function Dashboard() {
   const [vms, setVms] = useState<VM[]>([]);
-  const [servers, setServers] = useState<Server[]>([]);
+  const [servers, setServers] = useState<Server[]>([
+    {
+      id: 'default-cloud-server',
+      name: 'Cloud VM Server (Recommended)',
+      host: 'chrome-vm-backend-production.up.railway.app',
+      port: 443,
+      agent_port: 443,
+      novnc_port: 6080,
+      max_vms: 5,
+      location: 'Railway Cloud',
+      status: 'online',
+      created_at: new Date().toISOString(),
+      is_default: true
+    }
+  ]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showServerModal, setShowServerModal] = useState(false);
@@ -54,7 +68,7 @@ export default function Dashboard() {
 
   const fetchServers = async () => {
     try {
-      console.log('Fetching servers...');
+      console.log('Fetching additional servers...');
       const response = await fetch('/api/servers');
       console.log('Server response status:', response.status);
       
@@ -64,44 +78,17 @@ export default function Dashboard() {
       const data = await response.json();
       console.log('Server data received:', data);
       
-      // Always add default server first, then add any additional servers from API
-      const defaultServer = {
-        id: 'default-cloud-server',
-        name: 'Cloud VM Server (Recommended)',
-        host: 'chrome-vm-backend-production.up.railway.app',
-        port: 443,
-        agent_port: 443,
-        novnc_port: 6080,
-        max_vms: 5,
-        location: 'Railway Cloud',
-        status: 'online',
-        created_at: new Date().toISOString(),
-        is_default: true
-      };
-      
-      // Combine default server with any servers from API
-      const allServers = [defaultServer, ...data];
-      console.log('Setting all servers:', allServers);
-      setServers(allServers);
+      // Add additional servers from API to the existing default server
+      if (data.length > 0) {
+        setServers(prevServers => {
+          const existingIds = prevServers.map(s => s.id);
+          const newServers = data.filter((server: Server) => !existingIds.includes(server.id));
+          return [...prevServers, ...newServers];
+        });
+      }
     } catch (error) {
-      console.error('Error fetching servers:', error);
-      // If API fails, still show default server
-      console.log('API failed, adding default server');
-      const defaultServer = {
-        id: 'default-cloud-server',
-        name: 'Cloud VM Server (Recommended)',
-        host: 'chrome-vm-backend-production.up.railway.app',
-        port: 443,
-        agent_port: 443,
-        novnc_port: 6080,
-        max_vms: 5,
-        location: 'Railway Cloud',
-        status: 'online',
-        created_at: new Date().toISOString(),
-        is_default: true
-      };
-      console.log('Setting default server on error:', defaultServer);
-      setServers([defaultServer]);
+      console.error('Error fetching additional servers:', error);
+      // Default server is already in state, so we don't need to do anything
     }
   };
 
