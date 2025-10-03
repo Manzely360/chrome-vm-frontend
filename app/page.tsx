@@ -8,6 +8,7 @@ import ServerCard from '@/components/ServerCard';
 import CreateVMModal from '@/components/CreateVMModal';
 import CreateServerModal from '@/components/CreateServerModal';
 import ScriptModal from '@/components/ScriptModal';
+import TerminalModal from '@/components/TerminalModal';
 import { VM, Server, ScriptJob, CreateServerRequest } from '@/types';
 
 export default function Dashboard() {
@@ -17,6 +18,7 @@ export default function Dashboard() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showServerModal, setShowServerModal] = useState(false);
   const [showScriptModal, setShowScriptModal] = useState(false);
+  const [showTerminalModal, setShowTerminalModal] = useState(false);
   const [selectedVM, setSelectedVM] = useState<VM | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState<'vms' | 'servers'>('vms');
@@ -204,6 +206,11 @@ export default function Dashboard() {
     setShowScriptModal(true);
   };
 
+  const handleTerminalModal = (vm: VM) => {
+    setSelectedVM(vm);
+    setShowTerminalModal(true);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -331,6 +338,7 @@ export default function Dashboard() {
                   vm={vm}
                   onDelete={deleteVM}
                   onRunScript={handleScriptModal}
+                  onOpenTerminal={handleTerminalModal}
                 />
               ))}
             </div>
@@ -386,6 +394,14 @@ export default function Dashboard() {
         onClose={() => setShowScriptModal(false)}
         vm={selectedVM}
         onRunScript={runScript}
+      />
+
+      <TerminalModal
+        isOpen={showTerminalModal}
+        onClose={() => setShowTerminalModal(false)}
+        vmId={selectedVM?.id || ''}
+        vmName={selectedVM?.name || ''}
+        agentUrl={selectedVM?.agent_url || ''}
       />
     </div>
   );
