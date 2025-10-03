@@ -18,15 +18,17 @@ export interface Server {
   name: string;
   host: string;
   port: number;
+  agent_port?: number;
   novnc_port: number;
   max_vms: number;
   location: string;
-  status: 'active' | 'inactive' | 'maintenance';
+  status: 'active' | 'inactive' | 'maintenance' | 'online';
   health: 'healthy' | 'unhealthy' | 'unknown';
   created_at: string;
   last_check?: string;
   response_time?: string;
   error?: string;
+  is_default?: boolean;
 }
 
 export interface ScriptJob {

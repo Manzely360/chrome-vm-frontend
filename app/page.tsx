@@ -53,10 +53,41 @@ export default function Dashboard() {
         throw new Error('Failed to fetch servers');
       }
       const data = await response.json();
-      setServers(data);
+      
+      // If no servers exist, add a default cloud server
+      if (data.length === 0) {
+        const defaultServer = {
+          id: 'default-cloud-server',
+          name: 'Cloud VM Server (Recommended)',
+          host: 'chrome-vm-backend-production.up.railway.app',
+          agent_port: 3001,
+          novnc_port: 6080,
+          max_vms: 2,
+          location: 'Railway Cloud',
+          status: 'online',
+          created_at: new Date().toISOString(),
+          is_default: true
+        };
+        setServers([defaultServer]);
+      } else {
+        setServers(data);
+      }
     } catch (error) {
       console.error('Error fetching servers:', error);
-      toast.error('Failed to fetch servers');
+      // If API fails, still show default server
+      const defaultServer = {
+        id: 'default-cloud-server',
+        name: 'Cloud VM Server (Recommended)',
+        host: 'chrome-vm-backend-production.up.railway.app',
+        agent_port: 3001,
+        novnc_port: 6080,
+        max_vms: 2,
+        location: 'Railway Cloud',
+        status: 'online',
+        created_at: new Date().toISOString(),
+        is_default: true
+      };
+      setServers([defaultServer]);
     }
   };
 

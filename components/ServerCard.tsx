@@ -69,6 +69,7 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
   const getStatusIcon = () => {
     switch (server.status) {
       case 'active':
+      case 'online':
         return <WifiIcon className="h-4 w-4 text-success-500" />;
       case 'inactive':
         return <WifiOffIcon className="h-4 w-4 text-gray-400" />;
@@ -83,6 +84,8 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
     switch (server.status) {
       case 'active':
         return 'Active';
+      case 'online':
+        return 'Online';
       case 'inactive':
         return 'Inactive';
       case 'maintenance':
@@ -95,6 +98,7 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
   const getStatusClass = () => {
     switch (server.status) {
       case 'active':
+      case 'online':
         return 'status-ready';
       case 'inactive':
         return 'status-initializing';
@@ -111,7 +115,14 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center space-x-2">
           <ServerIcon className="h-5 w-5 text-primary-600" />
-          <h3 className="text-lg font-semibold text-gray-900">{server.name}</h3>
+          <h3 className="text-lg font-semibold text-gray-900">
+            {server.name}
+            {server.is_default && (
+              <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                (Recommended)
+              </span>
+            )}
+          </h3>
         </div>
         <div className="flex items-center space-x-2">
           {getHealthIcon()}
