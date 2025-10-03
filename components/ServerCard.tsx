@@ -191,8 +191,9 @@ export default function ServerCard({ server, onDelete, onTest }: ServerCardProps
         
         <button
           onClick={() => onDelete(server.id)}
-          className="btn btn-danger text-sm"
-          title="Delete Server"
+          disabled={server.is_default}
+          className={`btn btn-danger text-sm ${server.is_default ? 'opacity-50 cursor-not-allowed' : ''}`}
+          title={server.is_default ? 'Cannot delete default server' : 'Delete Server'}
         >
           <TrashIcon className="h-4 w-4" />
         </button>

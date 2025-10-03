@@ -164,6 +164,18 @@ export default function VMCard({ vm, onDelete, onRunScript, onOpenTerminal }: VM
         </button>
       </div>
 
+      {/* Loading Bar for VM Deployment */}
+      {vm.status === 'initializing' && (
+        <div className="mt-4">
+          <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+            <div className="bg-blue-500 h-2 rounded-full animate-pulse" style={{ width: '60%' }}></div>
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+            Deploying VM... This may take a few minutes
+          </p>
+        </div>
+      )}
+
       {/* NoVNC Preview */}
       {vm.status === 'ready' && (
         <div className="mt-4">
